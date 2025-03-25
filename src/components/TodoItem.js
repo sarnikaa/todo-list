@@ -22,6 +22,12 @@ const TodoText = styled.span`
   color: ${({ theme, $completed }) => ($completed ? theme.border : theme.text)};
 `;
 
+const DueDateLabel = styled.span`
+  margin-left: 10px;
+  font-size: 0.9em;
+  color: ${({ dueSoon, theme }) => (dueSoon ? "red" : theme.text)};
+`;
+
 const DeleteButton = styled.button`
   background: none;
   border: none;
@@ -36,6 +42,16 @@ const DeleteButton = styled.button`
 `;
 
 const TodoItem = ({ todo, toggleComplete, deleteTodo }) => {
+  // Check if the todo has a due date and if it is within the next 24 hours.
+  let dueSoon = false;
+  if (todo.dueDate) {
+    const dueDate = new Date(todo.dueDate);
+    const now = new Date();
+    const timeDiff = dueDate - now;
+    // If due date is within the next 24 hours (and not in the past)
+    dueSoon = timeDiff > 0 && timeDiff <= 24 * 60 * 60 * 1000;
+  }
+
   return (
     <ItemContainer>
       <input
@@ -45,6 +61,11 @@ const TodoItem = ({ todo, toggleComplete, deleteTodo }) => {
         style={{ marginRight: '10px' }}
       />
       <TodoText $completed={todo.completed}>{todo.text}</TodoText>
+      {todo.dueDate && (
+        <DueDateLabel dueSoon={dueSoon}>
+          {new Date(todo.dueDate).toLocaleDateString()}
+        </DueDateLabel>
+      )}
       <DeleteButton onClick={() => deleteTodo(todo.id)}>
         <FontAwesomeIcon icon={faTrash} />
       </DeleteButton>

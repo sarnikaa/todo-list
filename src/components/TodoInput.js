@@ -1,11 +1,19 @@
 // src/components/TodoInput.js
 import React, { useState } from "react";
 import styled from "styled-components";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Form = styled.form`
   display: flex;
+  flex-direction: column;
   gap: 10px;
   margin-bottom: 20px;
+`;
+
+const InputRow = styled.div`
+  display: flex;
+  gap: 10px;
 `;
 
 const Input = styled.input`
@@ -25,7 +33,7 @@ const Button = styled.button`
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s ease;
-
+  
   &:hover {
     background-color: ${({ theme }) => theme.buttonHover};
   }
@@ -33,22 +41,32 @@ const Button = styled.button`
 
 const TodoInput = ({ addTodo }) => {
   const [text, setText] = useState("");
+  const [dueDate, setDueDate] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (text.trim() === "") return;
-    addTodo(text);
+    addTodo(text, dueDate);
     setText("");
+    setDueDate(null);
   };
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Input
-        type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Enter a task..."
-      />
+      <InputRow>
+        <Input
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Enter a task..."
+        />
+        <DatePicker
+          selected={dueDate}
+          onChange={(date) => setDueDate(date)}
+          placeholderText="Due Date (optional)"
+          dateFormat="MM/dd/yyyy"
+        />
+      </InputRow>
       <Button type="submit">Add</Button>
     </Form>
   );

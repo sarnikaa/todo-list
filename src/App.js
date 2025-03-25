@@ -85,6 +85,15 @@ const ClearCompleted = styled.div`
   }
 `;
 
+const Alert = styled.div`
+  margin-top: 15px;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  color: white;
+  background-color: ${({ isOverdue }) => (isOverdue ? "#ff4d4d" : "#ffcc00")};
+`;
+
 function App() {
   // Lazy initialize todos from localStorage:
   const [todos, setTodos] = useState(() => {
@@ -96,6 +105,7 @@ function App() {
   const [isDark, setIsDark] = useState(false);
   const [filter, setFilter] = useState("all");
   const [showConfetti, setShowConfetti] = useState(false);
+  const [upcomingAlert, setUpcomingAlert] = useState(null);
 
   // Save todos to localStorage whenever they change
   useEffect(() => {
@@ -103,19 +113,41 @@ function App() {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
+useEffect(() => {
+    const now = new Date();
+    let alertMessage = null;
+
+    todos.forEach(todo => {
+      if (todo.dueDate) {
+        const dueDate = new Date(todo.dueDate);
+        const timeDiff = dueDate - now;
+        const oneDay = 24 * 60 * 60 * 1000;
+
+        if (timeDiff < 0) {
+          alertMessage = `Task "${todo.text}" is overdue!`;
+        } else if (timeDiff <= oneDay) {
+          alertMessage = `Task "${todo.text}" is due soon!`;
+        }
+      }
+    });
+
+    setUpcomingAlert(alertMessage);
+  }, [todos]);
+
   const toggleTheme = () => {
     setIsDark(prev => !prev);
   };
 
-  const addTodo = (text) => {
-    const newTodo = { id: Date.now(), text, completed: false };
+  const addTodo = (text, dueDate = null) => {
+    const newTodo = { id: Date.now(), text, completed: false, dueDate };
     setTodos([...todos, newTodo]);
-  };
+};
+
 
   // Display confetti for 5 seconds when a task is completed
   const triggerCelebration = () => {
     setShowConfetti(true);
-    setTimeout(() => setShowConfetti(false), 5000);
+    setTimeout(() => setShowConfetti(false), 7000);
   };
 
   const toggleComplete = (id) => {
@@ -167,6 +199,9 @@ function App() {
             )}
           </ToggleButton>
         </Header>
+        {upcomingAlert && <Alert isOverdue={upcomingAlert.includes("overdue")}>
+          {upcomingAlert}
+        </Alert>}
         <TodoInput addTodo={addTodo} />
         <TodoList
           todos={getFilteredTodos()}
