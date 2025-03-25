@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/static/css/main.3d8c34b0.css",
-    "main.js": "/static/js/main.abfe70d4.js",
-    "index.html": "/index.html",
-    "main.3d8c34b0.css.map": "/static/css/main.3d8c34b0.css.map",
-    "main.abfe70d4.js.map": "/static/js/main.abfe70d4.js.map"
+    "main.css": "/sarnikaa/todo-list/static/css/main.3d8c34b0.css",
+    "main.js": "/sarnikaa/todo-list/static/js/main.6bcbdd1e.js",
+    "index.html": "/sarnikaa/todo-list/index.html",
+    "main.3d8c34b0.css.map": "/sarnikaa/todo-list/static/css/main.3d8c34b0.css.map",
+    "main.6bcbdd1e.js.map": "/sarnikaa/todo-list/static/js/main.6bcbdd1e.js.map"
   },
   "entrypoints": [
     "static/css/main.3d8c34b0.css",
-    "static/js/main.abfe70d4.js"
+    "static/js/main.6bcbdd1e.js"
   ]
 }
